@@ -15,4 +15,10 @@ export class CarService {
       headers: { 'x-api-key': 'abc123' }
     });
   }
+
+  getCarById(id: string): Observable<Car> {
+    return this.http.get<Car>(`${this.apiUrl}/${id}`, {
+      headers: { 'x-api-key': 'abc123' }
+    });
+  }
 }
