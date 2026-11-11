@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
-import { Car, CreateCarDto } from '../models/car.model';
+import { Car, CreateCarDto, UpdateCarDto } from '../models/car.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,12 @@ export class CarService {
     )
   }
 
+  updateCar(id: string, changes: UpdateCarDto): Observable<Car> {
+    return this.http.put<Car>(`${this.apiUrl}/${id}`, changes, {
+      headers: { 'x-api-key': 'abc123' }
+    });
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
 
@@ -44,6 +50,7 @@ export class CarService {
       console.error(
         `Backend returned code ${error.status}, body was: `, error.error);
     }
+    // Return an observable with a user-facing error message.
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 }
