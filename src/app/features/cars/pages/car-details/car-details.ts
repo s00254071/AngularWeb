@@ -1,5 +1,5 @@
-import { Component, inject, input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, input, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,8 +15,12 @@ import { LoadState, withLoadState } from '../../../../shared/load-state';
 })
 export class CarDetails {
   private carService = inject(CarService);
+  private readonly router = inject(Router);
   readonly id = input.required<string>();
   readonly initial: LoadState<Car> = { status: 'loading' };
+
+  readonly deleting = signal(false);
+  readonly deleteError = signal<string | null>(null);
 
   state = toSignal(
     toObservable(this.id).pipe(
@@ -24,4 +28,19 @@ export class CarDetails {
     ),
     { initialValue: this.initial },
   );
+
+  deleteCar(car: Car): void {
+    if (!confirm(`Delete ${car.make} ${car.model}?`)) return;
+
+    this.deleting.set(true);
+    this.deleteError.set(null);
+
+    this.carService.deleteCar(car._id).subscribe({
+      next: () => this.router.navigate(['/cars']),
+      error: (err: Error) => {
+        this.deleteError.set(err.message);
+        this.deleting.set(false);
+      },
+    });
+  }
 }

@@ -37,6 +37,12 @@ export class CarService {
     });
   }
 
+    deleteCar(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      headers: { 'x-api-key': 'abc123' }
+    });
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
 
