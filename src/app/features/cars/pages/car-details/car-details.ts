@@ -1,13 +1,15 @@
 import { Component, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 import { Car } from '../../models/car.model';
 import { CarService } from '../../services/car.service';
 import { LoadState, withLoadState } from '../../../../shared/load-state';
 
 @Component({
   selector: 'app-car-details',
-  imports: [],
+  imports: [RouterLink, MatButtonModule],
   templateUrl: './car-details.html',
   styleUrl: './car-details.scss',
 })
